@@ -15,6 +15,7 @@
     <% if params[:action] == "index" %>
 
       <div class="navbar">
+        <div class="container">
         <%= link_to root_path do %>
           <%= image_tag "cocktail-logo.png", class: "nav-img"; %>
         <% end %>
@@ -49,6 +50,7 @@
               </div>
             </div>
           </div>
+        </div>
       </div>
     <% else %>
       <%= render 'navbar' %>
