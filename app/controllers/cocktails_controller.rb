@@ -1,7 +1,15 @@
 class CocktailsController < ApplicationController
   before_action :set_cocktail, only: [:show, :destroy, :edit, :update]
   def index
-    @cocktails = Cocktail.all
+    if params[:search].nil?
+      @cocktails = Cocktail.all
+    else
+      @cocktails_one = Cocktail.where('name ILIKE ?', '%' + params[:search][:name] + '%' )
+      @ingredients = Ingredient.where('name ILIKE ?', '%' + params[:search][:name] + '%' ).pluck(:id)
+      @doses = Dose.where(ingredient_id: @ingredients).pluck(:cocktail_id)
+      @cocktails_two = Cocktail.where(id: @doses)
+      @cocktails = (@cocktails_one + @cocktails_two).uniq
+    end
   end
 
   def show
@@ -28,7 +36,7 @@ class CocktailsController < ApplicationController
   end
 
   def update
-    @cocktail.update(name: params[:cocktail][:name], image_url: params[:cocktail][:image_url])
+    @cocktail.update(name: params[:cocktail][:name], image_url: params[:cocktail][:image_url], photo: params[:cocktail][:photo])
     redirect_to cocktail_path(@cocktail)
   end
 
@@ -39,6 +47,6 @@ class CocktailsController < ApplicationController
   end
 
   def cocktail_params
-    params.require(:cocktail).permit(:name, :image_url)
+    params.require(:cocktail).permit(:name, :image_url, :photo)
   end
 end

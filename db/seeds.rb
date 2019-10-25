@@ -14,7 +14,7 @@ end
 
 p ingredients_array
 
-10.times do
+30.times do
   new_i = Ingredient.new(name: ingredients_array.sample)
   puts "new ingredient #{new_i.name} was created"
   new_i.save!
